@@ -39,9 +39,9 @@ class Register extends Component {
         const { username , email , password , confPassword } = this.state
 
         return (
-            <div className="register">
-                <div className="registration-form">
-                    <form className="ui form" autoComplete="off" action="/http:" method="post">
+        <div className="register-wrapper">
+                <div className="register-form">
+                    <form className="ui form" autoComplete="off" action="/register" method="post">
                         <div className="ui huge header">Register<i className="fas fa-users"></i></div>
                         <div className={ `field ${ !username.hasValue && username.hasTouch ? 'error' : '' }`}>
                             <label htmlFor="username">Username:</label>

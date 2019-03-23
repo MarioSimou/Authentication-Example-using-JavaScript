@@ -19,7 +19,9 @@ class Navbar extends Component {
                 const pathname = href.match(/(http|https):\/\/.*(?=\/)(.*)/)
                 // records the current page
                 this.props.displayedPage(pathname ? pathname[2] : null)     
-                break;   
+                break;
+            default:
+                return   
         }
     }
 
