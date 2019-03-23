@@ -1,0 +1,30 @@
+.register {
+    padding: 20px;
+    max-height: 93.5vh;
+    min-height: 93.5vh;
+    background: url('../../img//registration-bg.jpg');
+    background-attachment: fixed;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover; 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.register > .registration-form {
+    width: 100%;
+    max-width: 600px;
+    background: rgba(255, 255, 255, 0.5 );
+    padding: 20px;
+    border-radius: 6px;
+}
+.register > .registration-form > form > .header {
+    text-align: center;
+}
+
+.fa-users {
+    margin-top: 10px;
+    font-size: 80px;
+    display: block;
+}

@@ -1,3 +1,64 @@
-.navbar > .menu {
-    border-radius: 0;
+.navbar {
+    display: grid;
+    grid-auto-flow: column;
+    grid-template-columns: minmax( auto , 200px) auto minmax( auto , 300px) ;
+    padding: 10px;
+    background: rgba(0, 128, 128 , 1);
+    position: sticky;
+    top: 0;
+    left: 0;
+    z-index: 10;
+}
+/* LEFT */
+.navbar > .left {
+    display: flex;
+    flex-direction: row;
+    justify-content: left;
+    align-items: center;
+}
+.navbar > .left > .site-logo {
+    margin-left: 20px;
+}
+
+.fa-accusoft {
+    font-size: 30px;
+}
+
+/* CENTER */
+.navbar > .center {
+    display: grid;
+    grid-auto-flow: row;
+    grid-template-columns: repeat( auto-fit , minmax( 60px, 120px ));
+}
+
+/* RIGHT */
+.navbar > .right {
+    display: grid;
+    grid-auto-flow: column;
+    grid-gap: 10px;
+    grid-template-columns: repeat( auto-fit , minmax( 60px , 120px ));
+}
+
+.navbar .field {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0px 6px;
+}
+
+
+/* LINKS */
+.navbar  a {
+    text-decoration: none;
+    color: white;
+    letter-spacing: 1.5px;
+    padding: 6px 12px;
+    border-bottom: 2px solid transparent;
+}
+.navbar  a:hover {
+    color: rgba( 255 , 255 , 255 , 0.5 ) 
+}
+
+.navbar  a.active {
+    border-bottom: 2px solid white;
 }
