@@ -14,12 +14,14 @@ class Register extends Component {
             email: {
                 value: '',
                 hasValue: false,
-                hasTouch: false
+                hasTouch: false,
+                hasError: false,
             },
             password: {
                 value: '',
                 hasValue: false,
-                hasTouch: false
+                hasTouch: false,
+                hasError: false,
             },
             message: {
                 show: false,
@@ -34,7 +36,7 @@ class Register extends Component {
     onChangeInput = e => {
         const { id, value } = e.target
         const hasValue = _UTIL.hasValue(value)
-        this.setState({ [id]: { value, hasValue, 'hasTouch': true } })
+        this.setState({ [id]: { value, hasValue, 'hasTouch': true , 'hasError' : false } })
     }
 
     onSubmitForm = async e => {
@@ -44,19 +46,31 @@ class Register extends Component {
         try {
             // form data
             const { email, password } = this.state
+            let hasErrorEmail, hasErrorPassword ;
 
             // POST localhost:3001/login application/x-www-form-urlencoded
             const req = { email: email.value, password: password.value }
             const res = await node({ method : 'POST', url : '/login', data : qs.stringify( req ) })
-            
-            //.post('/register',  { body : qs.stringify({ req }) })
-
             // update component
-            const { header, content, type } = res.data.message
-            this.setState({ message: { show: true, header, content, type } })
+            const { header, content, type , errors } = res.data.message
+            
+            if(errors){
+                const set = new Set( errors.map( v => v.param ) )
+                const stack = []
+
+                // an error class is added if the email and password have an error
+                for(let field of ['email' , 'password']){
+                    if( set.has( field ) ) stack.push( true )
+                    else stack.push( false )
+                }
+
+                [ hasErrorEmail , hasErrorPassword ] = stack
+            }
+            // updates the state so it includes any possible errors
+            this.setState({ email : { ...email , hasError : hasErrorEmail} , password : { ...password, hasError : hasErrorPassword } , message: { show: true, header, content, type } })
 
         } catch (e) {
-            this.setState({ message: { show: true, content: e.message } })
+            this.setState({ message: { show: true, header : 'Internal Error', content: e.message } })
             console.log('POST ERROR: ', e.message)
         }
     }
@@ -68,11 +82,12 @@ class Register extends Component {
     // returns the registration form JSX
     getRegistrationForm = () => {
         const { email, password } = this.state
+       
         return (
             <div className="login-form">
-                <form className="ui form" autoComplete="off" onSubmit={e => this.onSubmitForm(e)}>
+                <form className="ui form" autoComplete="off" onSubmit={e => this.onSubmitForm(e)} noValidate>
                     <div className="ui huge header">Login<i className="fas fa-users"></i></div>
-                    <div className={`field ${!email.hasValue && email.hasTouch ? 'error' : ''}`}>
+                    <div className={`field ${(!email.hasValue && email.hasTouch) || email.hasError ? 'error' : ''}`}>
                         <label htmlFor="email">Email Address:</label>
                         <input type="email"
                             name="email"
@@ -83,7 +98,7 @@ class Register extends Component {
                             required
                         />
                     </div>
-                    <div className={`field ${!password.hasValue && password.hasTouch ? 'error' : ''}`}>
+                    <div className={`field ${(!password.hasValue && password.hasTouch) || password.hasError ? 'error' : ''}`}>
                         <label htmlFor="password">Password:</label>
                         <input type="password"
                             name="password"
