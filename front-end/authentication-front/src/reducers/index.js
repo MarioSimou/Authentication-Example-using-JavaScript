@@ -10,5 +10,13 @@ const updateDisplayedPage = ( page = '/' , action) => {
     }
 }
 
+const storeLoggedUser = ( user = null , action ) => {
+    switch( action.type ){
+        case T.STORE_LOGGED_USER:
+            return action.payload.user
+        default:
+            return user
+    }
+}
 
-export default combineReducers({ updateDisplayedPage })
+export default combineReducers({ updateDisplayedPage , storeLoggedUser })

@@ -1,13 +1,17 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import node from '../../config/node'
 import { _UTIL } from '../../util'
-import './style.css'
 import qs from 'qs'
 
 // Components
 import Message from '../Message'
+// actions
+import { loggedUser } from '../../actions' 
+// styles
+import './style.css'
 
-class Register extends Component {
+class Login extends Component {
     constructor(props) {
         super(props)
         this.state = {
@@ -43,31 +47,32 @@ class Register extends Component {
         console.log('submit form')
         // prevents default behaviour
         e.preventDefault();
+        
         try {
             // form data
             const { email, password } = this.state
-            let hasErrorEmail, hasErrorPassword ;
-
+            let hasErrorEmail , hasErrorPassword; 
             // POST localhost:3001/login application/x-www-form-urlencoded
             const req = { email: email.value, password: password.value }
             const res = await node({ method : 'POST', url : '/login', data : qs.stringify( req ) })
-            // update component
-            const { header, content, type , errors } = res.data.message
+            // destructure the response object
+            const { user , message } = res.data
+            const { header, content, type , errors } = message
             
-            if(errors){
-                const set = new Set( errors.map( v => v.param ) )
-                const stack = []
+            // update redux store - if a user exists
+            if ( user) this.props.loggedUser( user )
 
-                // an error class is added if the email and password have an error
-                for(let field of ['email' , 'password']){
-                    if( set.has( field ) ) stack.push( true )
-                    else stack.push( false )
-                }
-
-                [ hasErrorEmail , hasErrorPassword ] = stack
+            // maps those fields which returned with an error
+            if ( errors ) {
+                [ hasErrorEmail , hasErrorPassword ] = _UTIL.mapErrorObject( errors , ['email' , 'password'] )
             }
+
             // updates the state so it includes any possible errors
-            this.setState({ email : { ...email , hasError : hasErrorEmail} , password : { ...password, hasError : hasErrorPassword } , message: { show: true, header, content, type } })
+            this.setState({ 
+                email : { ...email , hasError : hasErrorEmail} , 
+                password : { ...password, hasError : hasErrorPassword } , 
+                message: { show: true, header, content, type } 
+            })
 
         } catch (e) {
             this.setState({ message: { show: true, header : 'Internal Error', content: e.message } })
@@ -135,8 +140,11 @@ class Register extends Component {
                     {this.getRegistrationForm()}
                 </div>)
         }
-
     }
 }
 
-export default Register
+const mapStateToProps = state => {
+    return { user : state.storeLoggedUser }
+}
+
+export default connect( mapStateToProps , { loggedUser } )( Login )

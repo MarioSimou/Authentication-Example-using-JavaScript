@@ -1,9 +1,14 @@
-import * as TYPES from './types.js'
+import * as T from './types.js'
 
 // action that records the current displayed page
 const displayedPage = href => ({
-    type: TYPES.UPDATE_DISPLAYED_PAGE,
+    type: T.UPDATE_DISPLAYED_PAGE,
     payload: { href }
 })
 
-export { displayedPage }
+const loggedUser = user => ({
+    type : T.STORE_LOGGED_USER,
+    payload : { user }
+})
+
+export { displayedPage , loggedUser }

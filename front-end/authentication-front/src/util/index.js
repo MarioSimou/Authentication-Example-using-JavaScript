@@ -27,4 +27,21 @@ _UTIL.hasValue = (v) => {
     }
 }
 
+_UTIL.mapErrorObject = ( errors , fields ) => {
+    if( errors.length > 0 ){
+        const set = new Set( errors.map( v => v.param ) )
+        const stack = []
+
+        // an error class is added if the email and password have an error
+        for(let field of fields ){
+            if( set.has( field ) ) stack.push( true )
+            else stack.push( false )
+        }
+
+        return stack
+
+    } else return null
+    
+}
+
 export { _UTIL }
