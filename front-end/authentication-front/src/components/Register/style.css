@@ -10,6 +10,19 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    position: relative;
+}
+
+.app .message-wrapper {
+    position: absolute;
+    box-sizing: border-box;
+    top: 0px;
+    min-width: 100%;
+    max-width: 100%;
+}
+.app .message-wrapper > .message {
+    padding: 12px 10px;
+    border-radius: 0;
 }
 
 .register-form {
